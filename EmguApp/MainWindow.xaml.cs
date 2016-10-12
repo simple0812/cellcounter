@@ -211,30 +211,28 @@ namespace EmguApp
 
         private void Erode_OnClick(object sender, RoutedEventArgs e)
         {
-            if (binary == null)
+            if (workingImg == null)
             {
-                sbi1.Content = "请先将图片二值化";
+                sbi1.Content = "请先选择图片";
                 return;
             }
 
             Mat kernel1 = new Mat(3, 3, DepthType.Cv8U, 1);
-            CvInvoke.Erode(binary, binary, kernel1, System.Drawing.Point.Empty, 1, BorderType.Default, new MCvScalar(0));
-            workingImg = binary;
-            img.Source = BitmapSourceConvert.ToBitmapSource(binary);
+            CvInvoke.Erode(workingImg, workingImg, kernel1, System.Drawing.Point.Empty, 1, BorderType.Default, new MCvScalar(0));
+            img.Source = BitmapSourceConvert.ToBitmapSource(workingImg);
         }
 
         private void Dilate_OnClick(object sender, RoutedEventArgs e)
         {
-            if (binary == null)
+            if (workingImg == null)
             {
-                sbi1.Content = "请先将图片二值化";
+                sbi1.Content = "请先选择图片";
                 return;
             }
 
             Mat kernel1 = new Mat(3, 3, DepthType.Cv8U, 1);
-            CvInvoke.Dilate(binary, binary, kernel1, System.Drawing.Point.Empty, 1, BorderType.Default, new MCvScalar(0));
-            workingImg = binary;
-            img.Source = BitmapSourceConvert.ToBitmapSource(binary);
+            CvInvoke.Dilate(workingImg, workingImg, kernel1, System.Drawing.Point.Empty, 1, BorderType.Default, new MCvScalar(0));
+            img.Source = BitmapSourceConvert.ToBitmapSource(workingImg);
         }
 
         private void Blur_OnClick(object sender, RoutedEventArgs e)
