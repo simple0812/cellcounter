@@ -167,7 +167,7 @@ namespace EmguApp
             }
 
             sbi2.Content = "";
-            workingImg = binary = Helper.FillHolesx(binary.ToImage<Gray, byte>()).Mat.Clone();
+            workingImg = binary = Helper.FillHoles(binary.ToImage<Gray, byte>()).Mat.Clone();
             img.Source = BitmapSourceConvert.ToBitmapSource(workingImg);
         }
 
@@ -279,8 +279,8 @@ namespace EmguApp
                 return;
             }
 
-            var count = Helper.FindCounters(workingImg);
-            sbi3.Content = count.ToString();
+            var tuple = Helper.FindCounters(workingImg);
+            sbi3.Content = $"数量:{tuple.Item1}, 最小面积：{tuple.Item2}, 最大面积：{tuple.Item3}, 平均面积：{tuple.Item4}";
 
             img.Source = BitmapSourceConvert.ToBitmapSource(workingImg);
         }

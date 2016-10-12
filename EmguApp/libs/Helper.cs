@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
@@ -78,29 +80,7 @@ namespace EmguApp.libs
             return threshold;
         }
 
-
-        public static void FillHole(Mat srcBw, Mat dstBw)
-        {
-            try
-            {
-                Size m_Size = srcBw.Size;
-                Mat Temp = new Mat(m_Size.Height + 2, m_Size.Width + 2, DepthType.Cv8U, 3);//延展图像
-                srcBw.CopyTo(new Mat(Temp, new Rectangle(1, 1, m_Size.Width, m_Size.Height)));
-                Mat cutImg = srcBw.Clone();//裁剪延展的图像
-
-                new Mat(Temp, new Rectangle(1, 1, m_Size.Width, m_Size.Height)).CopyTo(cutImg);
-
-                CvInvoke.BitwiseNot(cutImg, cutImg);
-                CvInvoke.BitwiseOr(srcBw, cutImg, dstBw);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-            
-        }
-
-        public static Image<Gray, byte> FillHolesx(Image<Gray, byte> image)
+        public static Image<Gray, byte> FillHoles(Image<Gray, byte> image)
         {
             var resultImage = image.CopyBlank();
             Gray gray = new Gray(255);
@@ -205,7 +185,7 @@ namespace EmguApp.libs
             return x.Mat.Clone();
         }
 
-        public static int FindCounters(Mat imgBinary)
+        public static Tuple<int, double, double, double> FindCounters(Mat imgBinary)
         {
             try
             {
@@ -214,18 +194,35 @@ namespace EmguApp.libs
                 //CvInvoke.Canny(imgBinary, imgBinary, len, 255, 5, true);
                 CvInvoke.FindContours(imgBinary, contoursDetected, null, RetrType.Tree, ChainApproxMethod.ChainApproxSimple);
                 Mat markers = new Mat(imgBinary.Size, DepthType.Cv32S, 3);
+                var count = 0;
+                var allArea = 0d;
+
+                var list = new List<double>();
 
                 for (int i = 0; i < contoursDetected.Size; i++)
+                {
+                    var area = CvInvoke.ContourArea(contoursDetected[i]);
+                    if(area < 5) continue;
+
+                    list.Add(area);
+
                     CvInvoke.DrawContours(markers, contoursDetected, i, new MCvScalar(255), -1);
 
-                return contoursDetected.Size;
+                }
+
+               
+                //数量，最小，最大，平均
+                var min = list.Min();
+                var max = list.Max();
+                var ava = list.Average();
+                return new Tuple<int, double, double, double>(list.Count, min, max, ava);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);   
             }
 
-            return 0;
+            return new Tuple<int, double, double, double>(0, 0, 0, 0); ;
         }
     }
 }
