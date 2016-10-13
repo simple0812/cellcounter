@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,14 +34,12 @@ namespace EmguApp
     {
         private Mat src, gray, binary, workingImg;
         private string fileName = "";
+        private bool isMouseDown = false;
+        private System.Windows.Point startPoint ;
+        private Line line;
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void Dialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private void BtnFile_OnClick(object sender, RoutedEventArgs e)
@@ -56,9 +55,16 @@ namespace EmguApp
                 gray = null;
                 binary = null;
 
-                img.Width = src.Width;
-                img.Height = src.Height;
+                canvas.Width = img.Width = src.Width;
+                canvas.Height = img.Height = src.Height;
                 img.Source = BitmapSourceConvert.ToBitmapSource(src);
+            }
+
+            var lines = canvas.FindChildren<Line>();
+
+            foreach (var each in lines)
+            {
+                canvas.Children.Remove(each);
             }
         }
 
@@ -310,6 +316,65 @@ namespace EmguApp
             sbi3.Content = points.Length.ToString();
             CvInvoke.Canny(workingImg, workingImg, Helper.Otsu(workingImg), 255, 3);
             img.Source = BitmapSourceConvert.ToBitmapSource(workingImg);
+        }
+
+        private void Mark_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (workingImg == null)
+            {
+                sbi1.Content = "请先选择图片";
+                return;
+            }
+        }
+
+        private void Img_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            e.Handled = true;
+            if(!isMouseDown) return;
+
+            var endPoint = Mouse.GetPosition(e.Source as FrameworkElement);
+           
+            line.X2 = endPoint.X;
+            line.Y2 = endPoint.Y;
+           
+        }
+
+        private void Img_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+
+            isMouseDown = true;
+            startPoint = Mouse.GetPosition(e.Source as FrameworkElement);
+
+            line = new Line();
+            line.X1 = startPoint.X;
+            line.Y1 = startPoint.Y;
+            line.X2 = startPoint.X;
+            line.Y2 = startPoint.Y;
+            line.Stroke = new SolidColorBrush(Colors.Orange);
+            canvas.Children.Add(line);
+
+        }
+
+        private void Img_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+            isMouseDown = false;
+        }
+
+        private void Tj_OnClick(object sender, RoutedEventArgs e)
+        {
+            var lines = canvas.FindChildren<Line>().Select(p => Math.Sqrt((p.X2 - p.X1)*(p.X2 - p.X1) + (p.Y2 - p.Y1) *(p.Y2 - p.Y1))).ToList();
+            var min = lines.Min();
+            var max = lines.Max();
+            var ava = lines.Average();
+
+            sbi3.Content = $"数量:{lines.Count}, 最小面积：{Math.Round(min,2)}, 最大面积：{Math.Round(max, 2)}, 平均面积：{Math.Round(ava, 2)}";
+        }
+
+        private void Export_OnClick(object sender, RoutedEventArgs e)
+        {
+            PictureHelper.SaveCanvas(this, this.canvas, 96, "e:/xx.png");
         }
     }
 }

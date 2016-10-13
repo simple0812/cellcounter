@@ -11,7 +11,7 @@
         <Menu Height="23" Name="menu"  DockPanel.Dock="Top">
             <MenuItem Header="文件">
                 <MenuItem Header="打开" Click="BtnFile_OnClick" />
-                <MenuItem Header="导出" />
+                <MenuItem Header="导出" x:Name="export" Click="Export_OnClick" />
             </MenuItem>
             <MenuItem Header="操作">
                 <MenuItem Header="灰度图" x:Name="Gray" Click="Gray_OnClick"/>
@@ -29,10 +29,12 @@
                 <MenuItem Header="模糊" x:Name="Blur" Click="Blur_OnClick"/>
                 <MenuItem Header="高斯模糊" x:Name="GaussianBlur" Click="GaussianBlur_OnClick" />
                 <MenuItem Header="中值模糊" x:Name="MedianBlur" Click="MedianBlur_OnClick"/>
+                <Separator />
+                <MenuItem Header="边缘检测计数" x:Name="canny" Click="Count_OnClick"/>
             </MenuItem>
-            <MenuItem Header="计数">
-                <MenuItem Header="边缘检测" x:Name="canny" Click="Count_OnClick"/>
-                <MenuItem Header="简单图形" x:Name="simpleBlob" Click="SimpleBlob_OnClick"/>
+            <MenuItem Header="标记计数">
+                <MenuItem Header="标记" x:Name="mark" Click="Mark_OnClick"/>
+                <MenuItem Header="统计" x:Name="tj" Click="Tj_OnClick"/>
             </MenuItem>
         </Menu>
         <StatusBar Height="23" Name="sb"  DockPanel.Dock="Bottom">
@@ -40,8 +42,8 @@
             <StatusBarItem Content="" Name="sbi2"/>
             <StatusBarItem Content="" Name="sbi3"/>
         </StatusBar>
-        <StackPanel>
-            <Image Margin="5" Name="img"></Image>
-        </StackPanel>
+        <Canvas Name="canvas" MouseLeftButtonDown="Img_OnMouseLeftButtonDown" MouseLeftButtonUp="Img_OnMouseLeftButtonUp" MouseMove="Img_OnMouseMove" >
+            <Image  Name="img" ></Image>
+        </Canvas>
     </DockPanel>
 </Window>

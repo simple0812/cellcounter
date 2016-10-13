@@ -100,7 +100,9 @@
       <DependentUpon>TrackBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="libs\BitmapSourceConvert.cs" />
+    <Compile Include="libs\DependencyObjectExtensions.cs" />
     <Compile Include="libs\Helper.cs" />
+    <Compile Include="libs\PictureHelper.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
