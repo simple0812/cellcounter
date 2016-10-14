@@ -35,6 +35,7 @@ namespace EmguApp
         private Mat src, gray, binary, workingImg;
         private string fileName = "";
         private bool isMouseDown = false;
+        private bool isStartMark = false;
         private System.Windows.Point startPoint ;
         private Line line;
         public MainWindow()
@@ -286,6 +287,8 @@ namespace EmguApp
             }
 
             var tuple = Helper.FindCounters(workingImg);
+            sbi1.Content = "";
+            sbi2.Content = "";
             sbi3.Content = $"数量:{tuple.Item1}, 最小面积：{tuple.Item2}, 最大面积：{tuple.Item3}, 平均面积：{tuple.Item4}";
 
             img.Source = BitmapSourceConvert.ToBitmapSource(workingImg);
@@ -325,6 +328,8 @@ namespace EmguApp
                 sbi1.Content = "请先选择图片";
                 return;
             }
+
+            isStartMark = true;
         }
 
         private void Img_OnMouseMove(object sender, MouseEventArgs e)
@@ -342,6 +347,8 @@ namespace EmguApp
         private void Img_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
+
+            if(!isStartMark) return;
 
             isMouseDown = true;
             startPoint = Mouse.GetPosition(e.Source as FrameworkElement);
@@ -364,17 +371,20 @@ namespace EmguApp
 
         private void Tj_OnClick(object sender, RoutedEventArgs e)
         {
+            isStartMark = false;
             var lines = canvas.FindChildren<Line>().Select(p => Math.Sqrt((p.X2 - p.X1)*(p.X2 - p.X1) + (p.Y2 - p.Y1) *(p.Y2 - p.Y1))).ToList();
             var min = lines.Min();
             var max = lines.Max();
             var ava = lines.Average();
 
+            sbi1.Content = "";
+            sbi2.Content = "";
             sbi3.Content = $"数量:{lines.Count}, 最小面积：{Math.Round(min,2)}, 最大面积：{Math.Round(max, 2)}, 平均面积：{Math.Round(ava, 2)}";
         }
 
         private void Export_OnClick(object sender, RoutedEventArgs e)
         {
-            PictureHelper.SaveCanvas(this, this.canvas, 96, "e:/xx.png");
+            PictureHelper.SaveCanvas(this, this.canvas, 96, "xx.png");
         }
     }
 }
