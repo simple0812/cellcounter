@@ -185,8 +185,9 @@ namespace EmguApp.libs
             return x.Mat.Clone();
         }
 
-        public static Tuple<int, double, double, double> FindCounters(Mat imgBinary)
+        public static IList<double> FindCounters(Mat imgBinary)
         {
+            var list = new List<double>();
             try
             {
                 var contoursDetected = new VectorOfVectorOfPoint();
@@ -194,10 +195,8 @@ namespace EmguApp.libs
                 //CvInvoke.Canny(imgBinary, imgBinary, len, 255, 5, true);
                 CvInvoke.FindContours(imgBinary, contoursDetected, null, RetrType.Tree, ChainApproxMethod.ChainApproxSimple);
                 Mat markers = new Mat(imgBinary.Size, DepthType.Cv32S, 3);
-                var count = 0;
-                var allArea = 0d;
 
-                var list = new List<double>();
+                
 
                 for (int i = 0; i < contoursDetected.Size; i++)
                 {
@@ -210,19 +209,16 @@ namespace EmguApp.libs
 
                 }
 
-               
+                return list;
                 //数量，最小，最大，平均
-                var min = list.Min();
-                var max = list.Max();
-                var ava = list.Average();
-                return new Tuple<int, double, double, double>(list.Count, min, max, ava);
+               
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);   
             }
 
-            return new Tuple<int, double, double, double>(0, 0, 0, 0); ;
+            return list;
         }
     }
 }

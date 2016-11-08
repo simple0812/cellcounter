@@ -41,6 +41,14 @@ namespace EmguApp
         public MainWindow()
         {
             InitializeComponent();
+
+            if (DateTime.Now > new DateTime(2017, 6, 1))
+            {
+                miFile.IsEnabled = false;
+                miMark.IsEnabled = false;
+                miOperate.IsEnabled = false;
+                sbi3.Content = "该软件已于2017-06-01过期，请联系开发人员";
+            }
         }
 
         private void BtnFile_OnClick(object sender, RoutedEventArgs e)
@@ -58,6 +66,7 @@ namespace EmguApp
 
                 canvas.Width = img.Width = src.Width;
                 canvas.Height = img.Height = src.Height;
+                txtAbout.Text = "";
                 img.Source = BitmapSourceConvert.ToBitmapSource(src);
             }
 
@@ -286,12 +295,19 @@ namespace EmguApp
                 return;
             }
 
-            var tuple = Helper.FindCounters(workingImg);
+            var list = Helper.FindCounters(workingImg);
+
+            var min = list.Min();
+            var max = list.Max();
+            var ava = list.Average();
             sbi1.Content = "";
             sbi2.Content = "";
-            sbi3.Content = $"数量:{tuple.Item1}, 最小面积：{tuple.Item2}, 最大面积：{tuple.Item3}, 平均面积：{tuple.Item4}";
+            sbi3.Content = $"数量:{list.Count}, 最小面积：{min}, 最大面积：{max}, 平均面积：{ava}";
 
             img.Source = BitmapSourceConvert.ToBitmapSource(workingImg);
+
+            var stat = new Stat(list);
+            stat.ShowDialog();
         }
 
         private void SimpleBlob_OnClick(object sender, RoutedEventArgs e)
@@ -371,7 +387,10 @@ namespace EmguApp
 
         private void Tj_OnClick(object sender, RoutedEventArgs e)
         {
+            if(!isStartMark) return;
             isStartMark = false;
+            var x = canvas.FindChildren<Line>();
+            if(x == null || x.Count == 0) return;
             var lines = canvas.FindChildren<Line>().Select(p => Math.Sqrt((p.X2 - p.X1)*(p.X2 - p.X1) + (p.Y2 - p.Y1) *(p.Y2 - p.Y1))).ToList();
             var min = lines.Min();
             var max = lines.Max();
@@ -380,11 +399,25 @@ namespace EmguApp
             sbi1.Content = "";
             sbi2.Content = "";
             sbi3.Content = $"数量:{lines.Count}, 最小面积：{Math.Round(min,2)}, 最大面积：{Math.Round(max, 2)}, 平均面积：{Math.Round(ava, 2)}";
+
+            var stat = new Stat(lines);
+            stat.ShowDialog();
         }
 
         private void Export_OnClick(object sender, RoutedEventArgs e)
         {
             PictureHelper.SaveCanvas(this, this.canvas, 96, "xx.png");
+        }
+
+        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            img.Source = null;
+            src = null;
+            gray = null;
+            binary = null;
+            workingImg = null;
+
+            txtAbout.Text = "宁波生动细胞科技有限公司\nqq：1992134042\n邮箱:1992134042@qq.com";
         }
     }
 }

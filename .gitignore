@@ -57,6 +57,7 @@ ipch/
 *.psess
 *.vsp
 *.vspx
+*.vs
 
 # Guidance Automation Toolkit
 *.gpState
@@ -147,3 +148,4 @@ _pkginfo.txt
 src/SqliteApp/*
 node/FileManager/node_modules/*
 node/FileManager/files/*
+README.rar
