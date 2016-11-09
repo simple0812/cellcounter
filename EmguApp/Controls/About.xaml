@@ -1,0 +1,14 @@
+﻿<Window x:Class="EmguApp.Controls.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EmguApp.Controls"
+        mc:Ignorable="d"
+        Title="关于我们" Height="300" Width="600">
+    <StackPanel Margin="10">
+        <TextBlock Margin=" 0 0 0 10" FontSize="16">宁波生动细胞科技有限公司</TextBlock>
+        <TextBlock TextWrapping="Wrap" >是一家人体细胞自动化培养设备和耗材，以及相关技术服务的提供商。基于牛津大学授权的核心技术和英国再生医学先进制造中心的先进经验，我们专注于生产桌面级的细胞自动化培养设备。目标客户是在细胞疗法或者精准治疗领域有专业需求的各级美容、保健、医疗、生物制药以及科研院所。</TextBlock>
+        <TextBlock Margin="0 10"  FontSize="16">邮箱：oxsphere@sunscell.com</TextBlock>
+    </StackPanel>
+</Window>

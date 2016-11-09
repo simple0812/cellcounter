@@ -11,7 +11,7 @@ function initData(data) {
         data = JSON.parse(data);
     if (data.length === 1) {
         return {
-            count: [1],
+            count: [100.00],
             data :data
         }
     }
@@ -29,9 +29,10 @@ function initData(data) {
     for (var i = 0; i < 10; i++) {
         var d = min + i * ava;
         ret.data.push(d.toFixed(2));
-        ret.count.push(count(data, function (each) {
+        var percent = (count(data, function (each) {
             return each >= d - ava / 2 && each < d + ava / 2;
-        }))
+        }) * 100 /data.length).toFixed(2)
+        ret.count.push(percent)
     }
 
     return ret;
@@ -39,13 +40,42 @@ function initData(data) {
 
 function showChart(data) {
     var xdata = initData(data);
+
+    var cdata = {
+        labels: xdata.data,
+        datasets: [
+            {
+                label: '百分比',
+                data: xdata.count,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                pointHoverRadius: 5,
+                borderDashOffset: 0.0,
+                borderWidth: 1
+            }
+        ]
+    };
+
     var myChart = new Chart(ctx, {
         type: 'bar',
-        datasetFill : false,
         data: {
             labels: xdata.data,
             datasets: [{
-                label: '# 数量',
+                label: '百分比',
                 data: xdata.count,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -69,7 +99,7 @@ function showChart(data) {
             }]
         },
         options: {
-           
+            scaleLabel: "<%=value%>aaa"
         }
     });
 }

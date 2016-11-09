@@ -66,7 +66,6 @@ namespace EmguApp
 
                 canvas.Width = img.Width = src.Width;
                 canvas.Height = img.Height = src.Height;
-                txtAbout.Text = "";
                 img.Source = BitmapSourceConvert.ToBitmapSource(src);
             }
 
@@ -411,13 +410,7 @@ namespace EmguApp
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            img.Source = null;
-            src = null;
-            gray = null;
-            binary = null;
-            workingImg = null;
-
-            txtAbout.Text = "宁波生动细胞科技有限公司\nqq：1992134042\n邮箱:1992134042@qq.com";
+            new About().ShowDialog();
         }
     }
 }

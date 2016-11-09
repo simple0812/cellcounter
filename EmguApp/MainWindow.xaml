@@ -47,7 +47,6 @@
         </StatusBar>
         <Canvas Name="canvas" MouseLeftButtonDown="Img_OnMouseLeftButtonDown" MouseLeftButtonUp="Img_OnMouseLeftButtonUp" MouseMove="Img_OnMouseMove" >
             <Image  Name="img" MaxWidth="1400" MaxHeight="1400" ></Image>
-            <TextBlock x:Name="txtAbout"></TextBlock>
         </Canvas>
     </DockPanel>
 </Window>

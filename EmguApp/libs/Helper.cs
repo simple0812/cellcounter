@@ -201,7 +201,7 @@ namespace EmguApp.libs
                 for (int i = 0; i < contoursDetected.Size; i++)
                 {
                     var area = CvInvoke.ContourArea(contoursDetected[i]);
-                    if(area < 1) continue;
+                    if(area < 0.1) continue;
 
                     list.Add(area);
 
