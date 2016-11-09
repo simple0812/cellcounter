@@ -412,5 +412,82 @@ namespace EmguApp
         {
             new About().ShowDialog();
         }
+
+        private void ScBlack_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (src == null)
+            {
+                sbi1.Content = "请先选择图片";
+                return;
+            }
+            try
+            {
+                var x = src.ToImage<Gray, byte>();
+                var xgray = x.Mat.Clone();
+                Mat xBinary = xgray.Clone();
+
+                var otsu = Helper.Otsu(xgray);
+                CvInvoke.Threshold(xgray, xBinary, otsu, 255, ThresholdType.Binary);
+
+                var xworkingImg = Helper.DistanceTransform(xBinary);
+
+                var list = Helper.FindCounters(xworkingImg);
+
+                var min = list.Min();
+                var max = list.Max();
+                var ava = list.Average();
+                sbi1.Content = "";
+                sbi2.Content = "";
+                sbi3.Content = $"数量:{list.Count}, 最小面积：{min}, 最大面积：{max}, 平均面积：{ava}";
+
+                img.Source = BitmapSourceConvert.ToBitmapSource(xworkingImg);
+
+                var stat = new Stat(list);
+                stat.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                sbi2.Content = ex.Message;
+            }
+        }
+
+        private void ScWhite_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (src == null)
+            {
+                sbi1.Content = "请先选择图片";
+                return;
+            }
+            try
+            {
+                var x = src.ToImage<Gray, byte>();
+                var xgray = x.Mat.Clone();
+                Mat xBinary = xgray.Clone();
+
+                var otsu = Helper.Otsu(xgray);
+                CvInvoke.Threshold(xgray, xBinary, otsu, 255, ThresholdType.Binary);
+
+                Helper.RerverseColor(xBinary);
+                var xworkingImg = Helper.DistanceTransform(xBinary);
+
+                var list = Helper.FindCounters(xworkingImg);
+
+                var min = list.Min();
+                var max = list.Max();
+                var ava = list.Average();
+                sbi1.Content = "";
+                sbi2.Content = "";
+                sbi3.Content = $"数量:{list.Count}, 最小面积：{min}, 最大面积：{max}, 平均面积：{ava}";
+
+                img.Source = BitmapSourceConvert.ToBitmapSource(xworkingImg);
+
+                var stat = new Stat(list);
+                stat.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                sbi2.Content = ex.Message;
+            }
+        }
     }
 }

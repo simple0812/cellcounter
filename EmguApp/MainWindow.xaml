@@ -15,6 +15,9 @@
                 <MenuItem Header="导出" x:Name="export" Click="Export_OnClick" />
             </MenuItem>
             <MenuItem Header="操作" x:Name="miOperate">
+                <MenuItem Header="黑底一键计数" x:Name="scBlack" Click="ScBlack_OnClick"/>
+                <MenuItem Header="白底一键计数" x:Name="scWhite" Click="ScWhite_OnClick"/>
+                <Separator />
                 <MenuItem Header="灰度图" x:Name="Gray" Click="Gray_OnClick"/>
                 <MenuItem Header="二值化" x:Name="Thresholding" Click="Thresholding_OnClick"/>
                 <MenuItem Header="填充孔洞" x:Name="FillHole" Click="FillHole_OnClick" />
