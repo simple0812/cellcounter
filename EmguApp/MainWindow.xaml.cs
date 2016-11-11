@@ -36,6 +36,11 @@ namespace EmguApp
         private string fileName = "";
         private bool isMouseDown = false;
         private bool isStartMark = false;
+        private bool isStartSetScale = false;
+
+        private double xscale = -1;
+        private string xunit = "";
+
         private System.Windows.Point startPoint ;
         private Line line;
         public MainWindow()
@@ -363,7 +368,7 @@ namespace EmguApp
         {
             e.Handled = true;
 
-            if(!isStartMark) return;
+            if(!isStartMark && !isStartSetScale) return;
 
             isMouseDown = true;
             startPoint = Mouse.GetPosition(e.Source as FrameworkElement);
@@ -373,7 +378,8 @@ namespace EmguApp
             line.Y1 = startPoint.Y;
             line.X2 = startPoint.X;
             line.Y2 = startPoint.Y;
-            line.Stroke = new SolidColorBrush(Colors.Orange);
+            if (isStartSetScale) line.Tag = "scale";
+            line.Stroke = new SolidColorBrush( isStartSetScale ? Colors.Blue : Colors.Orange);
             canvas.Children.Add(line);
 
         }
@@ -382,15 +388,42 @@ namespace EmguApp
         {
             e.Handled = true;
             isMouseDown = false;
+
+            if (isStartSetScale)
+            {
+                var x = canvas.FindChildren<Line>().FirstOrDefault(p => p.Tag != null && p.Tag.ToString() == "scale");
+                if(x == null) return;
+
+                var len = Math.Sqrt((x.X2 - x.X1)*(x.X2 - x.X1) + (x.Y2 - x.Y1)*(x.Y2 - x.Y1));
+
+                if(len <=0) return;
+                var t = new SetScale(len);
+                t.OnSuccess += P_OnSuccess; 
+                t.ShowDialog();
+            }
+        }
+
+        private void P_OnSuccess(double arg1, string arg2)
+        {
+            xscale = arg1;
+            xunit = arg2;
+            isStartSetScale = false;
         }
 
         private void Tj_OnClick(object sender, RoutedEventArgs e)
         {
-            if(!isStartMark) return;
+            if (xscale <= -1 || xunit == "")
+            {
+                MessageBox.Show("请先设置长度比例");
+                return;
+            }
+
+            if (!isStartMark) return;
             isStartMark = false;
-            var x = canvas.FindChildren<Line>();
-            if(x == null || x.Count == 0) return;
-            var lines = canvas.FindChildren<Line>().Select(p => Math.Sqrt((p.X2 - p.X1)*(p.X2 - p.X1) + (p.Y2 - p.Y1) *(p.Y2 - p.Y1))).ToList();
+            
+            var x = canvas.FindChildren<Line>().Where(p => p.Tag == null || p.Tag.ToString() != "scale" ).ToList();
+            if(x.Count == 0) return;
+            var lines = x.Select(p => Math.Sqrt((p.X2 - p.X1)*(p.X2 - p.X1) + (p.Y2 - p.Y1) *(p.Y2 - p.Y1)) * xscale).ToList();
             var min = lines.Min();
             var max = lines.Max();
             var ava = lines.Average();
@@ -399,7 +432,7 @@ namespace EmguApp
             sbi2.Content = "";
             sbi3.Content = $"数量:{lines.Count}, 最小面积：{Math.Round(min,2)}, 最大面积：{Math.Round(max, 2)}, 平均面积：{Math.Round(ava, 2)}";
 
-            var stat = new Stat(lines);
+            var stat = new Stat(lines, xunit);
             stat.ShowDialog();
         }
 
@@ -488,6 +521,12 @@ namespace EmguApp
             {
                 sbi2.Content = ex.Message;
             }
+        }
+
+        private void Scale_OnClick(object sender, RoutedEventArgs e)
+        {
+
+            isStartSetScale = true;
         }
     }
 }

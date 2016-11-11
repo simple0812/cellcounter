@@ -38,6 +38,7 @@
             </MenuItem>
             <MenuItem Header="标记计数" x:Name="miMark">
                 <MenuItem Header="标记" x:Name="mark" Click="Mark_OnClick"/>
+                <MenuItem Header="设置长度比例" x:Name="scale" Click="Scale_OnClick"/>
                 <MenuItem Header="统计" x:Name="tj" Click="Tj_OnClick"/>
             </MenuItem>
             <MenuItem Header="关于我们" Click="MenuItem_OnClick">

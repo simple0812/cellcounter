@@ -94,6 +94,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SetScale.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Stat.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -112,6 +116,9 @@
     </Compile>
     <Compile Include="Controls\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SetScale.xaml.cs">
+      <DependentUpon>SetScale.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Stat.xaml.cs">
       <DependentUpon>Stat.xaml</DependentUpon>
@@ -161,6 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="html\js\Chart.bundle.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="html\js\Chart.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="html\js\stat.js">

@@ -6,22 +6,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EmguApp.Controls"
         mc:Ignorable="d"
-        Title="Stat" Height="400" Width="700">
-    <StackPanel Orientation="Horizontal">
-        <WindowsFormsHost Width="500" Height="300">
-            <wf:WebBrowser  x:Name="wb" ></wf:WebBrowser>
-        </WindowsFormsHost>
-        <ListView  x:Name="lv" Width="150" Height="300" Margin="20 0 0 0">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderThickness="0 0 0 1" BorderBrush="Black">
-                        <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Center" Width="120">
-                            <TextBlock Text="{Binding Id}"></TextBlock>
-                            <TextBlock Text="{Binding Data}" Margin="20 0 0 0"></TextBlock>
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        Title="Stat" Height="370" Width="700">
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <WindowsFormsHost Width="500" Height="300">
+                <wf:WebBrowser  x:Name="wb" ></wf:WebBrowser>
+            </WindowsFormsHost>
+            <ListView  x:Name="lv" Width="150" Height="300" Margin="20 0 0 0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="0 0 0 1" BorderBrush="Black">
+                            <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Center" Width="120">
+                                <TextBlock Text="{Binding Id}"></TextBlock>
+                                <TextBlock Text="{Binding Data}" Margin="20 0 0 0"></TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        <TextBlock Text="" x:Name="txtInfo" Margin="10 10"></TextBlock>
     </StackPanel>
+    
 </Window>

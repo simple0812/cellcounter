@@ -26,18 +26,20 @@ namespace EmguApp.Controls
     {
         private IList<double> list = null;
         private bool isExec = false;
+        private string unit;
 
-        public Stat(IList<double> list)
+        public Stat(IList<double> list, string unit = "")
         {
             InitializeComponent();
             this.list = list;
+            this.unit = unit;
             Loaded += Stat_Loaded;
         }
 
         private void Stat_Loaded(object sender, RoutedEventArgs e)
         {
-            lv.ItemsSource = list.Select((t, i) => new Foo(i + 1, t.ToString("##.###"))).ToList();
-
+            lv.ItemsSource = list.Select((t, i) => new Foo(i + 1, t.ToString("##.###") +unit)).ToList();
+            StatCount();
             var path = $"file:///{AppDomain.CurrentDomain.BaseDirectory}html/stat.html";
             wb.Navigate(new Uri(path, UriKind.Absolute));
             wb.AllowWebBrowserDrop = false;
@@ -46,6 +48,14 @@ namespace EmguApp.Controls
             wb.ObjectForScripting = helper;
             wb.DocumentCompleted += Wb_DocumentCompleted;
             wb.NewWindow += Wb_NewWindow;
+        }
+
+        private void StatCount()
+        {
+            var min = list.Min();
+            var max = list.Max();
+            var ava = list.Average();
+            txtInfo.Text= $"数量:{list.Count}, 最小直径：{min.ToString("##.##")}{unit}, 最大直径：{max.ToString("##.##")}{unit}, 平均直径：{ava.ToString("##.##")}{unit}";
         }
 
         private void Wb_NewWindow(object sender, System.ComponentModel.CancelEventArgs e)
@@ -67,7 +77,6 @@ namespace EmguApp.Controls
             string json = sr.ReadToEnd();
             sr.Close();
             msObj.Close();
-            Debug.WriteLine(json);
 
             wb.Document?.InvokeScript("showChart", new object[] {json});
         }
